@@ -12,7 +12,7 @@
     <meta property="og:url" content="https://auctiontalk.kr">
     <meta property="og:site_name" content="경매톡 AuctionTalk">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"FinancialService","name":"경매톡 - AuctionTalk","description":"대장TV 공식 경매 대출 계산 및 전문가 매칭 서비스","url":"https://auctiontalk.kr","telephone":"1588-0000","address":{"@type":"PostalAddress","addressCountry":"KR"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"3000"}}</script>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="스타일.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
@@ -90,14 +90,12 @@
                     <i class="fas fa-gift"></i>
                     <strong>완전 무료!</strong> 개인정보 입력 없이 예상 대출 한도를 바로 확인하세요
                 </div>
-
                 <div class="progress-container">
                     <div class="progress-bar-wrapper">
                         <div class="progress-bar" id="progress-bar"></div>
                     </div>
                     <span class="progress-text" id="progress-text">0%</span>
                 </div>
-
                 <div id="validation-warnings" class="validation-container" style="display: none;"></div>
 
                 <form id="before-form" class="calculator-form">
@@ -109,7 +107,6 @@
                                 <input type="text" id="before-case-number" name="caseNumber" placeholder="예: 2026타경1234">
                                 <span class="form-help">예: 2026타경1234 입력</span>
                             </div>
-
                             <div class="form-group full-width">
                                 <label for="before-address">물건 주소 <span style="color: #0066cc;">📋 복사 붙여넣기</span></label>
                                 <input type="text" id="before-address" name="address" placeholder="예: 경기도 광명시 광명로 123 103동 1002호">
@@ -118,28 +115,24 @@
                                     <i class="fas fa-check-circle"></i> <strong>자동 분류:</strong> <span id="before-address-region-text"></span>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-appraisal-price">감정가격 (만원)</label>
                                 <input type="number" id="before-appraisal-price" name="appraisalPrice" placeholder="예: 50000" min="1000">
                                 <span class="form-help">법원 감정가격 (선택)</span>
                                 <div id="before-appraisal-display" class="money-display" style="display: none;"></div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-kb-price">KB 시세 (만원)</label>
                                 <input type="number" id="before-kb-price" name="kbPrice" placeholder="예: 45000" min="1000">
                                 <span class="form-help">KB부동산 시세 (선택)</span>
                                 <div id="before-kb-display" class="money-display" style="display: none;"></div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-expected-price">예상 낙찰가 (만원)</label>
                                 <input type="number" id="before-expected-price" name="expectedPrice" placeholder="예: 30000" required min="1000">
                                 <span class="form-help">예상 낙찰가를 만원 단위로 입력하세요</span>
                                 <div id="before-expected-display" class="money-display" style="display: none;"></div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-property-type">물건 유형</label>
                                 <select id="before-property-type" name="propertyType" required>
@@ -152,7 +145,6 @@
                                     <option value="land">토지</option>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-region">지역 분류 <span style="color: #999; font-size: 13px;">(자동 입력됨)</span></label>
                                 <select id="before-region" name="region" required>
@@ -164,7 +156,6 @@
                                 </select>
                                 <span class="form-help">주소 입력 시 자동으로 선택되거나 직접 선택하세요</span>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-home-ownership">현재 주택 보유 여부</label>
                                 <select id="before-home-ownership" name="homeOwnership" required>
@@ -176,7 +167,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-section">
                         <h3 class="form-section-title">💰 재무 정보 (선택)</h3>
                         <div class="form-grid">
@@ -186,14 +176,12 @@
                                 <span class="form-help">DSR(총부채원리금상환비율) 계산에 필요</span>
                                 <div id="before-income-display" class="money-display" style="display: none;"></div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-existing-debt">기존 대출 연 상환액 (만원)</label>
                                 <input type="number" id="before-existing-debt" name="existingDebt" placeholder="예: 1200" min="0">
                                 <span class="form-help">현재 갚고 있는 모든 대출의 연 상환액</span>
                                 <div id="before-debt-display" class="money-display" style="display: none;"></div>
                             </div>
-
                             <div class="form-group">
                                 <label for="before-credit-score">신용점수 <span class="help-icon" onclick="showHelp('credit-score')">?</span></label>
                                 <select id="before-credit-score" name="creditScore">
@@ -214,17 +202,14 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="calculator-disclaimer">
                         <i class="fas fa-info-circle"></i>
                         본 계산 결과는 예상 한도이며, 실제 대출 심사 시 금융기관 정책에 따라 달라질 수 있습니다.
                     </div>
-
                     <button type="submit" class="btn btn-primary btn-block btn-large">
                         <i class="fas fa-calculator"></i> 대출 한도 계산하기
                     </button>
                 </form>
-
                 <div id="before-result" class="result-section" style="display: none;"></div>
             </div>
 
@@ -233,7 +218,6 @@
                     <i class="fas fa-user-check"></i>
                     <strong>낙찰 완료하셨나요?</strong> 정확한 대출 한도와 전문가 상담을 받으시려면 개인정보를 입력해 주세요
                 </div>
-
                 <form id="after-form" class="calculator-form">
                     <div class="form-section">
                         <h3 class="form-section-title">📋 사건 정보</h3>
@@ -250,7 +234,6 @@
                             <div class="form-group">
                                 <label for="after-kb-price">KB 시세 (만원)</label>
                                 <input type="number" id="after-kb-price" name="kbPrice" placeholder="예: 45000" min="1000">
-                                <span class="form-help">KB부동산 시세 (선택)</span>
                                 <div id="after-kb-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
@@ -291,7 +274,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-section">
                         <h3 class="form-section-title">👤 신청자 정보</h3>
                         <div class="form-grid">
@@ -309,14 +291,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-section">
                         <h3 class="form-section-title">💰 재무 정보</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="after-annual-income">연 소득 (만원)</label>
                                 <input type="number" id="after-annual-income" name="annualIncome" placeholder="예: 5000" required min="0">
-                                <span class="form-help">DSR 계산에 필요합니다</span>
                                 <div id="after-income-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
@@ -339,13 +319,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="privacy-consent">
                         <h4>개인정보 수집 및 이용 동의</h4>
                         <div class="privacy-content">
                             <p><strong>수집 항목:</strong> 이름, 연락처, 이메일, 사건번호, 물건정보, 재무정보</p>
                             <p><strong>수집 목적:</strong> 대출 한도 계산, 전문가 상담 매칭, 대출 중개 서비스 제공</p>
-                            <p><strong>보유 기간:</strong> 서비스 제공 완료 후 3년 (관련 법령에 따라 보관)</p>
+                            <p><strong>보유 기간:</strong> 서비스 제공 완료 후 3년</p>
                             <p><strong>거부 권리:</strong> 동의를 거부할 권리가 있으나, 서비스 이용이 제한됩니다</p>
                         </div>
                         <label class="privacy-checkbox">
@@ -353,12 +332,10 @@
                             <span>위 개인정보 수집 및 이용에 동의합니다 (필수)</span>
                         </label>
                     </div>
-
                     <div class="calculator-disclaimer">
                         <i class="fas fa-info-circle"></i>
                         제출하신 정보는 대출 한도 계산 및 전문가 매칭에만 사용되며, 제3자에게 제공되지 않습니다.
                     </div>
-
                     <button type="submit" class="btn btn-primary btn-block btn-large">
                         <i class="fas fa-paper-plane"></i> 신청하고 전문가 상담 받기
                     </button>
@@ -380,7 +357,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>경매톡 AuctionTalk</h3>
-                    <p class="footer-description">대장TV가 직접 운영하는 경매 대출 계산 및 전문가 매칭 서비스입니다. 37만 구독자와 3,000명 이상의 수강생이 신뢰하는 플랫폼에서 안전하고 정확한 경매 대출 상담을 받으세요.</p>
+                    <p class="footer-description">대장TV가 직접 운영하는 경매 대출 계산 및 전문가 매칭 서비스입니다.</p>
                 </div>
                 <div class="footer-section">
                     <h4>바로가기</h4>
@@ -388,7 +365,6 @@
                         <li><a href="#calculator">대출 계산기</a></li>
                         <li><a href="#consultants">전문가 상담</a></li>
                         <li><a href="#about">서비스 소개</a></li>
-                        <li><a href="admin.html">관리자 페이지</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -410,10 +386,7 @@
             <div class="footer-legal">
                 <strong>법적 고지사항</strong><br>
                 • 본 서비스는 대출 중개 서비스로, 최종 대출 승인은 금융기관의 심사 결과에 따릅니다.<br>
-                • 대출 중개 수수료: 본 플랫폼은 이용자에게 중개 수수료를 받지 않으며, 금융기관으로부터 수수료를 받습니다.<br>
-                • 과도한 대출은 개인 신용등급 하락의 원인이 될 수 있습니다. 계획적인 대출 이용을 권장합니다.<br>
-                • 개인정보는 「개인정보 보호법」에 따라 안전하게 관리되며, 서비스 제공 목적 외에는 사용되지 않습니다.<br>
-                • 상담 내용은 녹취될 수 있으며, 서비스 품질 향상을 위해 활용됩니다.
+                • 과도한 대출은 개인 신용등급 하락의 원인이 될 수 있습니다.
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2024 AuctionTalk by 대장TV. All Rights Reserved.</p>
@@ -430,12 +403,12 @@
             <p><strong>담당 전문가가 곧 연락드릴 예정입니다.</strong></p>
             <div class="modal-notice">
                 <i class="fas fa-info-circle"></i>
-                영업일 기준 24시간 이내에 연락드립니다. 연락이 없을 경우 1588-0000으로 문의해 주세요.
+                영업일 기준 24시간 이내에 연락드립니다.
             </div>
             <button class="btn btn-primary btn-block" onclick="closeModal()">확인</button>
         </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
