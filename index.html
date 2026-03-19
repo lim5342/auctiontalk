@@ -163,10 +163,20 @@
                                 </select>
                                 <span class="form-help">주소 입력 시 자동으로 선택되거나 직접 선택하세요</span>
                             </div>
+                            <!-- 규제지역 여부: 수도권일 때만 표시 -->
+                            <div class="form-group" id="before-regulated-zone-group" style="display:none;">
+                                <label for="before-regulated-zone">규제지역 여부</label>
+                                <select id="before-regulated-zone" name="isRegulated">
+                                    <option value="regulated">📍 규제지역</option>
+                                    <option value="non-regulated">🟢 비규제지역</option>
+                                </select>
+                                <span class="form-help">서울은 항상 규제지역(자동). 경기/인천은 물건 위치에 따라 선택하세요.</span>
+                            </div>
                             <div class="form-group">
                                 <label for="before-home-ownership">현재 주택 보유 여부</label>
                                 <select id="before-home-ownership" name="homeOwnership" required>
                                     <option value="">선택하세요</option>
+                                    <option value="first">생애최초 (처음 구입)</option>
                                     <option value="none">무주택</option>
                                     <option value="one">1주택</option>
                                     <option value="multiple">2주택 이상</option>
@@ -322,6 +332,7 @@
                                 <label for="after-home-ownership">현재 주택 보유 여부</label>
                                 <select id="after-home-ownership" name="homeOwnership" required>
                                     <option value="">선택하세요</option>
+                                    <option value="first">생애최초 (처음 구입)</option>
                                     <option value="none">무주택</option>
                                     <option value="one">1주택</option>
                                     <option value="multiple">2주택 이상</option>
@@ -448,7 +459,7 @@
                 <div class="footer-section">
                     <h4>문의</h4>
                     <p><i class="fas fa-phone"></i> 02-853-5875</p>
-                    <p><i class="fas fa-envelope"></i> contact@auctiontalk.kr</p>
+                    <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3e5d51504a5f5d4a7e5f4b5d4a5751504a5f525510554c">[email&#160;protected]</a></p>
                     <p><i class="fas fa-clock"></i> 평일 09:00 - 18:00</p>
                 </div>
                 <div class="footer-section">
@@ -490,6 +501,6 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="main.js"></script>
 </body>
 </html>
