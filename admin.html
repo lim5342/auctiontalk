@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>경매톡 관리자 - AuctionTalk Admin</title>
-    <link rel="stylesheet" href="css/admin.css">
+    <script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=2287"></script><link rel="stylesheet" href="css/admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
@@ -125,6 +125,11 @@
         if (username === 'admin' && password === 'admin1234') {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('admin-dashboard').style.display = 'flex';
+            // admin.js 함수로 데이터 로드
+            setTimeout(function() {
+                if (typeof loadDashboardData === 'function') loadDashboardData();
+                if (typeof loadInquiries === 'function') loadInquiries();
+            }, 100);
         } else {
             alert('아이디 또는 비밀번호가 올바르지 않습니다.\n\n올바른 계정:\n아이디: admin\n비밀번호: admin1234');
         }
@@ -143,19 +148,25 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const page = item.getAttribute('data-page');
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.getElementById(page + '-page').classList.add('active');
+                // admin.js의 switchPage 함수 우선 사용
+                if (typeof switchPage === 'function') {
+                    switchPage(page);
+                } else {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.getElementById(page + '-page').classList.add('active');
+                }
             });
         });
 
         const modal = document.getElementById('inquiry-modal');
         if (modal) {
-            modal.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('show'));
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('show'));
         }
     });
     </script>
-    <script src="admin.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>
