@@ -392,6 +392,8 @@ function calculateLoan(params) {
     let winningLtvUsed = 80;
     let isBanned = false;
     let banReason = '';
+    let trustSuspended = false;
+    let trustSuspensionReason = '';
     let conditions = [];
     let capApplied = false;
     let capLimit = Infinity;
@@ -402,9 +404,15 @@ function calculateLoan(params) {
     if (isSudo) {
         // ======== 수도권 ========
         if (homeOwnership === 'multiple') {
-            // 2주택자: 개인 대출 불가
+            // 2주택 이상: 개인 대출 중지
             isBanned = true;
-            banReason = '수도권 2주택자는 개인 주택담보대출이 불가합니다.';
+            banReason = '수도권 2주택 이상은 개인 주택담보대출이 중지되었습니다.';
+
+            // 서울 2주택 이상: 사업자 대출도 잠정 중지
+            if (region === 'seoul') {
+                trustSuspended = true;
+                trustSuspensionReason = '기준일 2026년 3월 25일 기준, 서울 2주택 이상 사업자 대출은 상품 변경 및 정책 혼선 가능성으로 잠시 중지되었습니다. 단, 금융사마다 상품이 변경될 수 있으니 추가 궁금한 사항은 전화 상담 바랍니다.';
+            }
         } else {
             // LTV 결정
             if (homeOwnership === 'first') {
@@ -532,7 +540,7 @@ function calculateLoan(params) {
 
     // 월 이자
     const personalMonthlyInterest = Math.floor(finalLimit * (fixedRateMin / 100) / 12);
-    const trustMonthlyInterest = Math.floor(trustLimit * (7.0 / 100) / 12);
+    const trustMonthlyInterest = Math.floor(trustLimit * (4.5 / 100) / 12);
 
     // DSR 표시용
     const maxMonthlyPayment = annualIncome > 0 ? annualIncome / 12 * 0.4 : 0;
@@ -563,9 +571,11 @@ function calculateLoan(params) {
         trust: {
             limit: trustLimit,
             ltv: trustLtvPercent,
-            rate: { min: 7.0, max: 8.5 },
+            rate: { min: 4.5, max: 5.5 },
             monthlyInterest: trustMonthlyInterest,
             isResidential,
+            isSuspended: trustSuspended,
+            suspensionReason: trustSuspensionReason,
             reason: `사업자 신탁대출 (DSR 비규제, 방 빼기 없음) - ${isResidential ? '주택 80%' : '비주택 90%'}`
         },
         dsr: {
@@ -580,7 +590,7 @@ function buildTrustCard(result, fmt) {
     const expertCommentTrust = `사업자 대출은 개인과 달리 <strong>DSR 규제 없이</strong> 대출이 가능하며, 방 빼기 절차 없이 바로 실행 가능합니다.<br>
         ${result.trust.isResidential ? '주택 기준 낙찰가의 <strong>최대 80%</strong>' : '비주택(상가/건물) 기준 낙찰가의 <strong>최대 90%</strong>'}까지 대출 가능하며,<br>
         예상 대출 한도는 최대 <strong>${fmt(result.trust.limit)}만원</strong>이고,<br>
-        월 이자는 약 <strong>${fmt(result.trust.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(금리 7.0% 기준)</span><br>
+        월 이자는 약 <strong>${fmt(result.trust.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(금리 4.5% 기준)</span><br>
         <small style="color:#999;">※ 사업자 등록 필요 · 신탁 등기비 약 100~150만원</small>`;
     return `<div class="loan-card">
                 <div class="loan-card-header"><div class="loan-card-icon"><i class="fas fa-building"></i></div><h3>사업자 신탁대출</h3></div>
@@ -600,6 +610,17 @@ function buildTrustCard(result, fmt) {
 }
 
 
+
+function buildTrustSuspendedCard(result) {
+    return `<div class="loan-card" style="border:2px solid #ef9a9a; background:#fff8f8;">
+                <div class="loan-card-header"><div class="loan-card-icon" style="background:#c62828;"><i class="fas fa-pause-circle"></i></div><h3>사업자 대출 중지</h3></div>
+                <div style="background:#fff3f3;border:1px solid #ef9a9a;border-radius:8px;padding:14px;margin-top:10px;font-size:14px;line-height:1.8;color:#7f1d1d;">
+                    <p><strong>⚠️ ${result.trust.suspensionReason || '현재 사업자 대출은 잠시 중지되었습니다.'}</strong></p>
+                    <p style="margin-top:8px;">단, 금융사마다 상품이 변경될 수 있으니 추가 궁금한 사항은 전화 상담 바랍니다.</p>
+                </div>
+            </div>`;
+}
+
 function displayResult(result, formData) {
     const resultSection = document.getElementById('before-result');
     if (!resultSection) return;
@@ -608,14 +629,17 @@ function displayResult(result, formData) {
     const regionText = { 'seoul': '서울', 'metro': '수도권(경기/인천)', 'metro-city': '광역시', 'local': '지방' };
     const propText = { 'apt': '아파트', 'villa': '빌라/연립', 'house': '단독주택', 'officetel': '오피스텔', 'commercial': '상가/업무시설', 'land': '토지' };
 
-    // 2주택자 수도권 대출 금지 케이스
+    // 2주택 이상 수도권 대출 중지 케이스
     if (result.personal.isBanned) {
-        const trustCard = buildTrustCard(result, fmt);
+        const trustCard = result.trust.isSuspended ? buildTrustSuspendedCard(result) : buildTrustCard(result, fmt);
+        const subMessage = result.trust.isSuspended
+            ? `<p><strong>사업자 대출도 현재는 잠시 중지</strong> 상태입니다.</p><p style="margin-top:6px; color:#666;">단, 금융사마다 상품이 변경될 수 있으니 추가 궁금한 사항은 전화 상담 바랍니다.</p>`
+            : `<p>단, <strong>사업자 신탁대출</strong>은 가능합니다. 아래 사업자 대출 한도를 확인하세요.</p>`;
         resultSection.innerHTML = `
-            <div class="result-header" style="background:linear-gradient(135deg,#c62828,#e53935);"><h2><i class="fas fa-ban"></i> 개인 대출 불가</h2></div>
+            <div class="result-header" style="background:linear-gradient(135deg,#c62828,#e53935);"><h2><i class="fas fa-ban"></i> 개인 대출 중지</h2></div>
             <div style="background:#fff3f3;border:1px solid #ef9a9a;border-radius:8px;padding:16px;margin:16px 0;font-size:14px;line-height:1.8;">
                 <p><strong>⚠️ ${result.personal.banReason}</strong></p>
-                <p>단, <strong>사업자 신탁대출</strong>은 가능합니다. 아래 사업자 대출 한도를 확인하세요.</p>
+                ${subMessage}
             </div>
             <div class="loan-cards">${trustCard}</div>
             <div class="result-cta"><h3><i class="fas fa-phone-alt"></i> 전문가 상담</h3>
