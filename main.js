@@ -810,9 +810,38 @@ function showHelp(topic) {
 }
 
 // =============================================
-// 낙찰 후 신청 폼 제출 (로컬스토리지 임시 저장)
-// Supabase 연동 전까지 localStorage 사용
+// 낙찰 후 신청 폼 제출 (Supabase 우선, 실패 시 localStorage 폴백)
 // =============================================
+function getAuctionTalkSupabaseClient() {
+    return window.AUCTIONTALK_SUPABASE_READY && window.auctiontalkSupabase
+        ? window.auctiontalkSupabase
+        : null;
+}
+
+function buildInquiryPayload(data) {
+    return {
+        name: data.name || '',
+        phone: data.phone || '',
+        email: data.email || '',
+        address: data.address || data.propertyAddress || '',
+        case_number: data.caseNumber || '',
+        property_type: data.propertyType || '',
+        region: data.region || '',
+        home_ownership: data.homeOwnership || '',
+        appraisal_value: parseInt(data.appraisalValue || 0, 10) || 0,
+        kb_price: parseInt(data.kbPrice || 0, 10) || 0,
+        expected_winning_price: parseInt(data.expectedPrice || 0, 10) || 0,
+        annual_income: parseInt(data.annualIncome || 0, 10) || 0,
+        existing_debt: parseInt(data.existingDebt || 0, 10) || 0,
+        credit_score: data.creditScore || '',
+        is_regulated: data.isRegulated || '',
+        status: 'pending',
+        assigned_to: 'unassigned',
+        memo: '',
+        source: 'website'
+    };
+}
+
 async function handleAfterFormSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -822,8 +851,22 @@ async function handleAfterFormSubmit(e) {
         return;
     }
 
-    // 로컬스토리지에 임시 저장 (Supabase 연동 전)
-    const inquiryData = {
+    const inquiryData = buildInquiryPayload(data);
+    const supabase = getAuctionTalkSupabaseClient();
+
+    if (supabase) {
+        try {
+            const { error } = await supabase.from('inquiries').insert([inquiryData]);
+            if (error) throw error;
+            showSuccessModal();
+            e.target.reset();
+            return;
+        } catch (error) {
+            console.error('Supabase 저장 실패, localStorage 폴백:', error);
+        }
+    }
+
+    const fallbackInquiry = {
         ...data,
         status: 'pending',
         source: 'website',
@@ -831,7 +874,7 @@ async function handleAfterFormSubmit(e) {
         id: Date.now()
     };
     const inquiries = loadFromLocalStorage('pendingInquiries') || [];
-    inquiries.push(inquiryData);
+    inquiries.push(fallbackInquiry);
     saveToLocalStorage('pendingInquiries', inquiries);
 
     showSuccessModal();
