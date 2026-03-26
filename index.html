@@ -11,8 +11,9 @@
     <meta property="og:description" content="경매 대출 한도 1분 만에 확인! 대장TV가 직접 운영하는 무료 대출 계산 및 전문가 매칭 서비스">
     <meta property="og:url" content="https://auctiontalk.kr">
     <meta property="og:site_name" content="경매톡 AuctionTalk">
-    <script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=10801"></script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FinancialService","name":"경매톡 - AuctionTalk","description":"대장TV 공식 경매 대출 계산 및 전문가 매칭 서비스","url":"https://auctiontalk.kr","telephone":"02-853-5875","address":{"@type":"PostalAddress","addressCountry":"KR"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"3000"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FinancialService","name":"경매톡 - AuctionTalk","description":"대장TV 공식 경매 대출 계산 및 전문가 매칭 서비스","url":"https://auctiontalk.kr","telephone":"02-853-5875","address":{"@type":"PostalAddress","addressCountry":"KR"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"3000"}}</script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/mobile-additions.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 </head>
@@ -44,7 +45,6 @@
         </div>
     </section>
 
-    <!-- 경매톡이 특별한 이유 3가지 -->
     <section id="about" class="about">
         <div class="container">
             <h2 class="section-title">경매톡이 특별한 이유</h2>
@@ -81,8 +81,14 @@
                 </button>
             </div>
 
-            <!-- 낙찰 전 조회 탭 -->
             <div id="before-tab" class="tab-content active">
+                <div class="free-cta-box">
+                    <div class="free-title">🎉 완전무료!</div>
+                    <ul>
+                        <li>개인정보 입력 없이 가능</li>
+                        <li>대출한도 + 금리 같이 확인</li>
+                    </ul>
+                </div>
                 <div class="free-service-notice">
                     <i class="fas fa-gift"></i>
                     <strong>완전 무료!</strong> 개인정보 입력 없이 예상 대출 한도를 바로 확인하세요
@@ -90,7 +96,6 @@
                 <div id="validation-warnings" class="validation-container" style="display: none;"></div>
 
                 <form id="before-form" class="calculator-form">
-                    <!-- 진행 상황 바 (물건 정보 위) -->
                     <div class="progress-container">
                         <div class="progress-label-row">
                             <span class="progress-label-text">작성 진행 상황</span>
@@ -115,7 +120,7 @@
                                 <span class="form-help">예: 2026타경1234 입력</span>
                             </div>
                             <div class="form-group full-width">
-                                <label for="before-address">물건 주소 <span style="color: #0066cc;">📋 복사 붙여넣기</span></label>
+                                <label for="before-address">물건 주소 <span class="required-badge">필수</span></label>
                                 <input type="text" id="before-address" name="address" placeholder="예: 경기도 광명시 광명로 123 103동 1002호">
                                 <span class="form-help">경매 물건 주소를 복사해서 붙여넣으세요. 자동으로 지역이 분류됩니다.</span>
                                 <div id="before-address-result" style="display: none; margin-top: 8px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 13px; color: #1565c0;">
@@ -123,25 +128,25 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="before-appraisal-price">감정가격 (만원)</label>
+                                <label for="before-appraisal-price">감정가격 (만원) <span class="required-badge">필수</span></label>
                                 <input type="number" id="before-appraisal-price" name="appraisalPrice" placeholder="예: 50000" min="1000">
                                 <span class="form-help">법원 감정가격 (대출 한도 산출 기준)</span>
                                 <div id="before-appraisal-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="before-kb-price">KB 시세 (만원) <span class="optional-badge">필수 아님</span></label>
+                                <label for="before-kb-price">KB 시세 (만원) <span class="optional-badge">선택</span></label>
                                 <input type="number" id="before-kb-price" name="kbPrice" placeholder="예: 45000" min="1000">
                                 <span class="form-help">KB부동산 시세 (참고용, 없으면 생략 가능)</span>
                                 <div id="before-kb-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="before-expected-price">예상 낙찰가 (만원)</label>
+                                <label for="before-expected-price">예상 낙찰가 (만원) <span class="required-badge">필수</span></label>
                                 <input type="number" id="before-expected-price" name="expectedPrice" placeholder="예: 30000" required min="1000">
                                 <span class="form-help">예상 낙찰가를 만원 단위로 입력하세요</span>
                                 <div id="before-expected-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="before-property-type">물건 유형</label>
+                                <label for="before-property-type">물건 유형 <span class="required-badge">필수</span></label>
                                 <select id="before-property-type" name="propertyType" required>
                                     <option value="">선택하세요</option>
                                     <option value="apt">아파트</option>
@@ -163,7 +168,6 @@
                                 </select>
                                 <span class="form-help">주소 입력 시 자동으로 선택되거나 직접 선택하세요</span>
                             </div>
-                            <!-- 규제지역 여부: 수도권일 때만 표시 -->
                             <div class="form-group" id="before-regulated-zone-group" style="display:none;">
                                 <label for="before-regulated-zone">규제지역 여부</label>
                                 <select id="before-regulated-zone" name="isRegulated">
@@ -173,7 +177,7 @@
                                 <span class="form-help">서울은 항상 규제지역(자동). 경기/인천은 물건 위치에 따라 선택하세요.</span>
                             </div>
                             <div class="form-group">
-                                <label for="before-home-ownership">현재 주택 보유 여부</label>
+                                <label for="before-home-ownership">현재 주택 보유 여부 <span class="required-badge">필수</span></label>
                                 <select id="before-home-ownership" name="homeOwnership" required>
                                     <option value="">선택하세요</option>
                                     <option value="first">생애최초 (처음 구입)</option>
@@ -212,50 +216,33 @@
                                     <option value="650">650~699점 (6등급)</option>
                                     <option value="600">600점 이하</option>
                                 </select>
-                                <!-- 카카오톡 신용정보 확인 방법 -->
                                 <div class="credit-help">
                                     <a href="javascript:void(0)" onclick="toggleKakaoGuide()" style="color: #0066cc; font-size: 13px; text-decoration: none;">
                                         <i class="fas fa-comment" style="color:#FEE500;"></i> 카카오톡에서 무료로 신용점수 확인하기 <i class="fas fa-chevron-down" id="kakao-chevron" style="font-size:11px;"></i>
                                     </a>
                                 </div>
-                                <!-- 카카오톡 신용점수 확인 가이드 -->
                                 <div id="kakao-guide" class="kakao-guide" style="display:none;">
                                     <div class="kakao-guide-title"><i class="fas fa-comment" style="color:#FEE500;"></i> 카카오톡 신용점수 확인 방법</div>
                                     <div class="kakao-steps">
                                         <div class="kakao-step">
                                             <div class="step-num">1</div>
-                                            <div class="step-content">
-                                                <strong>카카오톡 앱 실행</strong>
-                                                <p>스마트폰에서 카카오톡 앱을 여세요</p>
-                                            </div>
+                                            <div class="step-content"><strong>카카오톡 앱 실행</strong><p>스마트폰에서 카카오톡 앱을 여세요</p></div>
                                         </div>
                                         <div class="kakao-step">
                                             <div class="step-num">2</div>
-                                            <div class="step-content">
-                                                <strong>하단 [···] 더보기 탭 클릭</strong>
-                                                <p>카카오톡 하단 메뉴에서 더보기(···) 버튼을 누르세요</p>
-                                            </div>
+                                            <div class="step-content"><strong>하단 [···] 더보기 탭 클릭</strong><p>카카오톡 하단 메뉴에서 더보기(···) 버튼을 누르세요</p></div>
                                         </div>
                                         <div class="kakao-step">
                                             <div class="step-num">3</div>
-                                            <div class="step-content">
-                                                <strong>카카오페이 선택</strong>
-                                                <p>상단 또는 메뉴에서 <strong>카카오페이</strong>를 선택하세요</p>
-                                            </div>
+                                            <div class="step-content"><strong>카카오페이 선택</strong><p>상단 또는 메뉴에서 <strong>카카오페이</strong>를 선택하세요</p></div>
                                         </div>
                                         <div class="kakao-step">
                                             <div class="step-num">4</div>
-                                            <div class="step-content">
-                                                <strong>내 신용점수 확인</strong>
-                                                <p>카카오페이 앱 내 <strong>[혜택] → [내 신용점수]</strong>를 클릭하면 무료로 확인 가능</p>
-                                            </div>
+                                            <div class="step-content"><strong>내 신용점수 확인</strong><p>카카오페이 앱 내 <strong>[혜택] → [내 신용점수]</strong>를 클릭하면 무료로 확인 가능</p></div>
                                         </div>
                                         <div class="kakao-step">
                                             <div class="step-num">5</div>
-                                            <div class="step-content">
-                                                <strong>점수 확인 후 위에 입력</strong>
-                                                <p>확인된 점수를 위 신용점수 선택란에 입력하시면 더 정확한 한도가 계산됩니다</p>
-                                            </div>
+                                            <div class="step-content"><strong>점수 확인 후 위에 입력</strong><p>확인된 점수를 위 신용점수 선택란에 입력하시면 더 정확한 한도가 계산됩니다</p></div>
                                         </div>
                                     </div>
                                     <a href="https://m.score.kakao.com/" target="_blank" class="kakao-direct-btn">
@@ -277,7 +264,6 @@
                 <div id="before-result" class="result-section" style="display: none;"></div>
             </div>
 
-            <!-- 낙찰 후 신청 탭 -->
             <div id="after-tab" class="tab-content">
                 <div class="free-service-notice">
                     <i class="fas fa-user-check"></i>
@@ -288,26 +274,26 @@
                         <h3 class="form-section-title">📋 사건 정보</h3>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="after-case-number">사건번호</label>
+                                <label for="after-case-number">사건번호 <span class="required-badge">필수</span></label>
                                 <input type="text" id="after-case-number" name="caseNumber" placeholder="예: 2024타경12345" required>
                             </div>
                             <div class="form-group">
-                                <label for="after-appraisal-value">감정가 (만원)</label>
+                                <label for="after-appraisal-value">감정가 (만원) <span class="required-badge">필수</span></label>
                                 <input type="number" id="after-appraisal-value" name="appraisalValue" placeholder="예: 50000" required min="1000">
                                 <div id="after-appraisal-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="after-kb-price">KB 시세 (만원) <span class="optional-badge">필수 아님</span></label>
+                                <label for="after-kb-price">KB 시세 (만원) <span class="optional-badge">선택</span></label>
                                 <input type="number" id="after-kb-price" name="kbPrice" placeholder="예: 45000" min="1000">
                                 <div id="after-kb-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="after-expected-price">낙찰가 (만원)</label>
+                                <label for="after-expected-price">낙찰가 (만원) <span class="required-badge">필수</span></label>
                                 <input type="number" id="after-expected-price" name="expectedPrice" placeholder="예: 35000" required min="1000">
                                 <div id="after-expected-display" class="money-display" style="display: none;"></div>
                             </div>
                             <div class="form-group">
-                                <label for="after-property-type">물건 유형</label>
+                                <label for="after-property-type">물건 유형 <span class="required-badge">필수</span></label>
                                 <select id="after-property-type" name="propertyType" required>
                                     <option value="">선택하세요</option>
                                     <option value="apt">아파트</option>
@@ -319,7 +305,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="after-region">지역</label>
+                                <label for="after-region">지역 <span class="required-badge">필수</span></label>
                                 <select id="after-region" name="region" required>
                                     <option value="">선택하세요</option>
                                     <option value="seoul">서울</option>
@@ -329,7 +315,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="after-home-ownership">현재 주택 보유 여부</label>
+                                <label for="after-home-ownership">현재 주택 보유 여부 <span class="required-badge">필수</span></label>
                                 <select id="after-home-ownership" name="homeOwnership" required>
                                     <option value="">선택하세요</option>
                                     <option value="first">생애최초 (처음 구입)</option>
@@ -345,11 +331,11 @@
                         <h3 class="form-section-title">👤 신청자 정보</h3>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="after-name">이름</label>
+                                <label for="after-name">이름 <span class="required-badge">필수</span></label>
                                 <input type="text" id="after-name" name="name" placeholder="홍길동" required>
                             </div>
                             <div class="form-group">
-                                <label for="after-phone">연락처</label>
+                                <label for="after-phone">연락처 <span class="required-badge">필수</span></label>
                                 <input type="tel" id="after-phone" name="phone" placeholder="010-1234-5678" required>
                                 <span class="form-help">숫자만 입력하면 자동으로 - 가 입력됩니다</span>
                             </div>
@@ -394,7 +380,6 @@
                         </div>
                     </div>
 
-                    <!-- 개인정보 수집 및 이용 동의 (더보기 형태) -->
                     <div class="privacy-consent">
                         <h4><i class="fas fa-shield-alt"></i> 개인정보 수집 및 이용 동의</h4>
                         <div class="privacy-summary">
@@ -410,9 +395,7 @@
                             <p><strong>제3자 제공:</strong> 대출 상담 전문가 매칭 목적에 한하여 제공될 수 있음</p>
                             <p><strong>거부 권리:</strong> 동의를 거부할 권리가 있으나, 서비스 이용이 제한될 수 있습니다</p>
                             <p style="margin-top:10px; padding:10px; background:#fff3cd; border-radius:4px; font-size:12px; color:#856404;">
-                                <strong>⚠️ 법적 고지:</strong> 본 플랫폼은 대출을 직접 실행하거나 중개 수수료를 수취하는 대출 중개업자가 아닙니다. 
-                                경매톡은 대출 상담 전문가와 소비자를 연결하는 정보 제공 플랫폼입니다. 
-                                최종 대출 조건 및 실행은 금융기관과 소비자 간의 직접 계약으로 이루어집니다.
+                                <strong>⚠️ 법적 고지:</strong> 본 플랫폼은 대출을 직접 실행하거나 중개 수수료를 수취하는 대출 중개업자가 아닙니다. 경매톡은 대출 상담 전문가와 소비자를 연결하는 정보 제공 플랫폼입니다.
                             </p>
                         </div>
                         <label class="privacy-checkbox">
@@ -430,6 +413,21 @@
                     </button>
                 </form>
             </div>
+        </div>
+    </section>
+
+    <section class="legal-notice-section">
+        <div class="container">
+            <div class="legal-notice-header">
+                <span class="legal-icon">⚖️</span>
+                법적 고지 및 면책 공고
+            </div>
+            <ul class="legal-notice-items">
+                <li>본 플랫폼(경매톡)은 대출을 직접 실행하거나 중개 수수료를 수취하는 대출 중개업자가 아닙니다.</li>
+                <li>경매톡은 경매 대출 정보 제공 및 전문가 연결을 위한 플랫폼 서비스입니다. 어떠한 수수료도 요구하지 않습니다.</li>
+                <li>본 계산기의 대출 한도는 예상치이며, 실제 승인은 금융기관 심사 결과에 따라 달라집니다.</li>
+                <li>과도한 대출은 개인 신용등급 하락의 원인이 될 수 있으니 신중하게 이용하세요.</li>
+            </ul>
         </div>
     </section>
 
@@ -459,16 +457,17 @@
                 <div class="footer-section">
                     <h4>문의</h4>
                     <p><i class="fas fa-phone"></i> 02-853-5875</p>
-                    <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e98a86879d888a9da9889c8a9d8086879d888582c7829b">[email&#160;protected]</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:qkqk5342@naver.com" style="color:#aaa;">qkqk5342@naver.com</a></p>
                     <p><i class="fas fa-clock"></i> 평일 09:00 - 18:00</p>
                 </div>
                 <div class="footer-section">
                     <h4>대장TV 채널</h4>
                     <div class="footer-backlinks">
-                        <a href="https://www.youtube.com/@daejangTV" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> YouTube 대장TV</a>
-                        <a href="https://cafe.naver.com/daejang" target="_blank" rel="noopener"><i class="fas fa-comments"></i> 네이버 카페</a>
-                        <a href="https://blog.naver.com/daejang" target="_blank" rel="noopener"><i class="fas fa-blog"></i> 네이버 블로그</a>
-                        <a href="https://www.instagram.com/daejang_tv" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="https://www.youtube.com/@ksj" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> YouTube 대장TV</a>
+                        <a href="https://bosstvauction.co.kr/" target="_blank" rel="noopener"><i class="fas fa-comments"></i> 무료 상담</a>
+                        <a href="https://cafe.naver.com/mkjournal/159633" target="_blank" rel="noopener"><i class="fas fa-calendar-check"></i> 무료 설명회</a>
+                        <a href="https://blog.naver.com/ksj44378" target="_blank" rel="noopener"><i class="fas fa-blog"></i> 공식 카페 (자료 제공)</a>
+                        <a href="https://bossauction.co.kr/" target="_blank" rel="noopener"><i class="fas fa-gavel"></i> 대장 옥션</a>
                     </div>
                 </div>
             </div>
@@ -501,7 +500,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <script src="main.js"></script>
 </body>
