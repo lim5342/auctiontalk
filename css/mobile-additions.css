@@ -1,9 +1,7 @@
 /* =============================================
-   모바일 전용 추가 CSS
-   PC 레이아웃 변경 없음 - @media (max-width: 768px) 내부만 적용
+   모바일 전용 추가 CSS - PC 레이아웃 변경 없음
    ============================================= */
 
-/* ── 필수/선택 뱃지 ── */
 .required-badge {
     display: inline-block;
     background: #e53e3e;
@@ -29,7 +27,6 @@
     vertical-align: middle;
 }
 
-/* ── 금액 한글 변환 표시 ── */
 .money-display {
     margin-top: 6px;
     padding: 6px 12px;
@@ -41,18 +38,13 @@
     color: #0066cc;
 }
 
-/* ── 법적고지 섹션 ── */
 .legal-notice-section {
     background: #1a202c;
     border-top: 3px solid #e53e3e;
     padding: 24px 0;
     color: #e2e8f0;
 }
-
-.legal-notice-section .container {
-    padding: 0 20px;
-}
-
+.legal-notice-section .container { padding: 0 20px; }
 .legal-notice-header {
     display: flex;
     align-items: center;
@@ -62,12 +54,6 @@
     font-weight: 700;
     color: #fff;
 }
-
-.legal-notice-header .legal-icon {
-    font-size: 20px;
-    color: #ffd700;
-}
-
 .legal-notice-items {
     list-style: none;
     padding: 0;
@@ -76,7 +62,6 @@
     flex-direction: column;
     gap: 10px;
 }
-
 .legal-notice-items li {
     display: flex;
     align-items: flex-start;
@@ -85,7 +70,6 @@
     color: #cbd5e0;
     line-height: 1.7;
 }
-
 .legal-notice-items li::before {
     content: "•";
     color: #e53e3e;
@@ -94,47 +78,122 @@
     flex-shrink: 0;
 }
 
-/* ── 모바일 전용 스타일 ── */
-@media (max-width: 768px) {
-    #about { display: none; }
+/* 완전무료 박스: 기본 숨김 */
+.free-cta-box { display: none; }
 
-    @keyframes ctaPulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(255,200,0,0.6); transform: scale(1); }
-        50% { box-shadow: 0 0 0 10px rgba(255,200,0,0); transform: scale(1.03); }
-    }
-    .hero .btn-primary {
-        animation: ctaPulse 2s ease-in-out infinite;
-    }
-
-    .tab-button[data-tab="before"] { border-color: #0066cc; color: #0066cc; }
-    .tab-button[data-tab="before"].active { background: #0066cc; color: #fff; }
-    .tab-button[data-tab="after"] { border-color: #e53e3e; color: #e53e3e; }
-    .tab-button[data-tab="after"].active { background: #e53e3e; color: #fff; border-color: #e53e3e; }
-    .tab-button[data-tab="after"]:not(.active) { font-weight: 700; background: #fff5f5; }
-
-    .tab-content { padding: 16px; }
-    .form-section { margin-bottom: 24px; }
-    .money-display { font-size: 13px; padding: 5px 10px; }
-    .legal-notice-section { padding: 20px 0; }
-    .legal-notice-header { font-size: 15px; }
-    .legal-notice-items li { font-size: 12px; }
-
-    .free-cta-box {
-        background: linear-gradient(135deg, #ffd700, #ffb700);
-        border-radius: 10px;
-        padding: 16px;
-        margin-bottom: 20px;
-        text-align: center;
-        color: #222;
-        font-weight: 700;
-    }
-    .free-cta-box .free-title { font-size: 22px; margin-bottom: 8px; }
-    .free-cta-box ul { list-style: none; padding: 0; margin: 0; font-size: 14px; font-weight: 600; }
-    .free-cta-box ul li::before { content: "✓ "; color: #0066cc; }
-}
-
+/* PC에서는 법적고지 섹션 숨김 */
 @media (min-width: 769px) {
     .legal-notice-section { display: none; }
     .free-cta-box { display: none; }
 }
 
+/* ============================================
+   모바일 전용 (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+
+    #about { display: none; }
+
+    .hero { padding: 32px 16px 28px; }
+    .hero-title { font-size: 24px; line-height: 1.35; margin-bottom: 10px; }
+    .hero-subtitle { font-size: 14px; margin-bottom: 6px; }
+    .hero-keywords { font-size: 12px; margin-bottom: 18px; line-height: 1.6; }
+
+    @keyframes ctaPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255,200,0,0.7); transform: scale(1); }
+        50% { box-shadow: 0 0 0 12px rgba(255,200,0,0); transform: scale(1.04); }
+    }
+    .hero .btn-primary {
+        animation: ctaPulse 2s ease-in-out infinite;
+        font-size: 17px;
+        padding: 15px 28px;
+    }
+
+    .calculator { padding: 20px 0 32px; }
+    .section-title { font-size: 20px; margin-bottom: 14px; }
+
+    .tabs { flex-direction: column; gap: 10px; margin-bottom: 16px; padding: 0 4px; }
+    .tab-button {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 15px;
+        border-radius: 10px;
+        justify-content: center;
+    }
+
+    .tab-button[data-tab="before"] { border: 2px solid #0066cc; color: #0066cc; background: #f0f7ff; }
+    .tab-button[data-tab="before"].active { background: #0066cc; color: #fff; border-color: #0066cc; }
+
+    .tab-button[data-tab="after"] { border: 2px solid #e53e3e; color: #e53e3e; background: #fff5f5; font-weight: 800; }
+    .tab-button[data-tab="after"].active { background: #e53e3e; color: #fff; border-color: #e53e3e; }
+
+    .tab-content { padding: 16px; border-radius: 12px; }
+
+    /* 완전무료 노란 박스 */
+    .free-cta-box {
+        display: block;
+        background: linear-gradient(135deg, #ffd700, #ffb700);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        text-align: center;
+        color: #222;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(255,183,0,0.3);
+    }
+    .free-cta-box .free-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .free-cta-box ul { list-style: none; padding: 0; margin: 0; font-size: 14px; font-weight: 600; }
+    .free-cta-box ul li { margin: 4px 0; }
+    .free-cta-box ul li::before { content: "✓ "; color: #0066cc; }
+
+    /* 파란 안내 배너 숨김 */
+    .free-service-notice { display: none; }
+
+    /* 폼 간격 */
+    .form-section { margin-bottom: 20px; }
+    .form-section-title { font-size: 15px; line-height: 1.5; }
+    .form-grid { gap: 14px; }
+    .form-group { margin-bottom: 0; }
+    .form-group label { font-size: 14px; margin-bottom: 6px; display: block; }
+    .form-group input,
+    .form-group select {
+        padding: 12px 13px;
+        font-size: 15px;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .form-help { font-size: 12px; margin-top: 4px; color: #888; }
+
+    /* 금액 표시 */
+    .money-display { font-size: 13px; padding: 5px 10px; margin-top: 5px; }
+
+    /* 제출 버튼 */
+    .btn-block.btn-large {
+        font-size: 17px;
+        padding: 16px;
+        border-radius: 10px;
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    /* 법적고지 모바일 */
+    .legal-notice-section { display: block; padding: 20px 0; }
+    .legal-notice-header { font-size: 15px; }
+    .legal-notice-items li { font-size: 12px; }
+
+    /* 푸터 */
+    .footer { padding: 24px 16px 20px; }
+    .footer-content { grid-template-columns: 1fr; gap: 20px; }
+    .footer-backlinks a { font-size: 13px; padding: 10px 12px; }
+    .footer-legal { font-size: 11px; padding: 14px; line-height: 1.8; }
+
+    /* 진행바 */
+    .progress-container { margin-bottom: 16px; }
+
+    /* 결과 섹션 */
+    .loan-cards { grid-template-columns: 1fr !important; gap: 16px; }
+    .result-summary { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .result-cta { padding: 20px 16px; }
+    .result-cta h3 { font-size: 17px; }
+}
