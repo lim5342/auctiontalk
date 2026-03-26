@@ -3,7 +3,6 @@ function scrollToCalculator() {
     document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
 }
 
-// 카카오 신용점수 가이드 토글
 function toggleKakaoGuide() {
     const guide = document.getElementById('kakao-guide');
     const chevron = document.getElementById('kakao-chevron');
@@ -16,7 +15,6 @@ function toggleKakaoGuide() {
     }
 }
 
-// 개인정보 더보기 토글
 function togglePrivacy() {
     const detail = document.getElementById('privacy-detail');
     const text = document.getElementById('privacy-toggle-text');
@@ -29,7 +27,6 @@ function togglePrivacy() {
     }
 }
 
-// 주소에서 자동으로 지역 분류
 function classifyRegionFromAddress(address) {
     if (!address) return null;
     const addr = address.trim();
@@ -84,7 +81,7 @@ function formatKoreanWon(manwon) {
     let result = [];
     if (eok > 0) result.push(`${eok.toLocaleString('ko-KR')}억`);
     if (man > 0) result.push(`${man.toLocaleString('ko-KR')}만원`);
-    else if (eok > 0) result.push('원');
+    else if (eok > 0) result.push('');
     return result.join(' ');
 }
 
@@ -124,7 +121,6 @@ function showWarnings(warnings, containerId) {
     container.style.display = 'block';
 }
 
-// 진행 상황 업데이트 (100% 도달 시 텍스트 숨김)
 function updateProgress() {
     const form = document.getElementById('before-form');
     if (!form) return;
@@ -134,18 +130,11 @@ function updateProgress() {
     const progress = (filledCount / requiredFields.length) * 100;
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
-    if (progressBar) {
-        progressBar.style.width = `${progress}%`;
-    }
-    // 100% 텍스트 숨김, 중간값만 표시
+    if (progressBar) progressBar.style.width = `${progress}%`;
     if (progressText) {
-        if (Math.round(progress) >= 100) {
-            progressText.textContent = '';
-        } else if (progress > 0) {
-            progressText.textContent = `${Math.round(progress)}%`;
-        } else {
-            progressText.textContent = '';
-        }
+        if (Math.round(progress) >= 100) progressText.textContent = '';
+        else if (progress > 0) progressText.textContent = `${Math.round(progress)}%`;
+        else progressText.textContent = '';
     }
 }
 
@@ -162,39 +151,25 @@ function updateMoneyDisplay(inputId, displayId) {
     });
 }
 
-// 전화번호 자동 하이픈 처리
 function setupPhoneAutoHyphen(inputId) {
     const input = document.getElementById(inputId);
     if (!input) return;
     input.addEventListener('input', function() {
         let value = this.value.replace(/[^0-9]/g, '');
         if (value.startsWith('02')) {
-            // 서울 02 번호 처리
-            if (value.length <= 2) {
-                this.value = value;
-            } else if (value.length <= 6) {
-                this.value = value.slice(0, 2) + '-' + value.slice(2);
-            } else if (value.length <= 10) {
-                this.value = value.slice(0, 2) + '-' + value.slice(2, 6) + '-' + value.slice(6);
-            } else {
-                this.value = value.slice(0, 2) + '-' + value.slice(2, 6) + '-' + value.slice(6, 10);
-            }
+            if (value.length <= 2) this.value = value;
+            else if (value.length <= 6) this.value = value.slice(0,2)+'-'+value.slice(2);
+            else if (value.length <= 10) this.value = value.slice(0,2)+'-'+value.slice(2,6)+'-'+value.slice(6);
+            else this.value = value.slice(0,2)+'-'+value.slice(2,6)+'-'+value.slice(6,10);
         } else {
-            // 일반 번호 (010, 011, 016 등)
-            if (value.length <= 3) {
-                this.value = value;
-            } else if (value.length <= 7) {
-                this.value = value.slice(0, 3) + '-' + value.slice(3);
-            } else if (value.length <= 11) {
-                this.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
-            } else {
-                this.value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
-            }
+            if (value.length <= 3) this.value = value;
+            else if (value.length <= 7) this.value = value.slice(0,3)+'-'+value.slice(3);
+            else if (value.length <= 11) this.value = value.slice(0,3)+'-'+value.slice(3,7)+'-'+value.slice(7);
+            else this.value = value.slice(0,3)+'-'+value.slice(3,7)+'-'+value.slice(7,11);
         }
     });
 }
 
-// 낙찰가만 변경 시 다른 필드 유지
 function setupExpectedPriceOnly() {
     const expectedInput = document.getElementById('before-expected-price');
     if (!expectedInput) return;
@@ -246,7 +221,6 @@ function loadFormData() {
             }
         }
     });
-    // restore notification 숨김 처리 (내부적으로만 데이터 복원)
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -267,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateMoneyDisplay('before-appraisal-price', 'before-appraisal-display');
     updateMoneyDisplay('before-kb-price', 'before-kb-display');
+    updateMoneyDisplay('before-expected-price', 'before-expected-display');
     updateMoneyDisplay('before-annual-income', 'before-income-display');
     updateMoneyDisplay('before-existing-debt', 'before-debt-display');
     updateMoneyDisplay('after-appraisal-value', 'after-appraisal-display');
@@ -278,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupExpectedPriceOnly();
     handleAddressInput('before-address', 'before-region', 'before-address-result', 'before-address-region-text');
 
-    // 규제지역 셀렉터: 수도권(서울/경기인천)일 때만 표시
     const regionSelect = document.getElementById('before-region');
     const regulatedGroup = document.getElementById('before-regulated-zone-group');
     const regulatedSelect = document.getElementById('before-regulated-zone');
@@ -299,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (regionSelect) regionSelect.addEventListener('change', updateRegulatedZoneVisibility);
     updateRegulatedZoneVisibility();
 
-    // 전화번호 자동 하이픈
     setupPhoneAutoHyphen('after-phone');
 
     const form = document.getElementById('before-form');
@@ -327,25 +300,19 @@ function handleBeforeFormSubmit(e) {
     const inputs = form.querySelectorAll('input, select');
     const data = {};
     inputs.forEach(input => { if (input.name) data[input.name] = input.value; });
-
     const warnings = validateInputs(data);
     showWarnings(warnings, 'validation-warnings');
-
     const expectedWinningPrice = parseInt(data.expectedPrice) || 0;
     const appraisalPrice = parseInt(data.appraisalPrice) || 0;
     const kbPrice = parseInt(data.kbPrice) || 0;
     const annualIncome = parseInt(data.annualIncome) || 0;
     const existingDebt = parseInt(data.existingDebt) || 0;
-
     if (!expectedWinningPrice) { alert('예상 낙찰가를 입력해주세요.'); return; }
     if (!data.propertyType) { alert('물건 유형을 선택해주세요.'); return; }
     if (!data.region) { alert('지역을 선택해주세요.'); return; }
     if (!data.homeOwnership) { alert('주택 보유 여부를 선택해주세요.'); return; }
-
-    // 규제지역 여부 (서울=항상 규제, 경기/인천=선택)
     const isRegulatedInput = form.querySelector('[name="isRegulated"]');
     const isRegulated = isRegulatedInput ? (isRegulatedInput.value !== 'non-regulated') : true;
-
     const result = calculateLoan({
         expectedWinningPrice, appraisalPrice, kbPrice,
         homeOwnership: data.homeOwnership,
@@ -359,31 +326,15 @@ function handleBeforeFormSubmit(e) {
     saveCalculationToHistory(data, result);
 }
 
-// =============================================
-// 핵심 대출 계산 로직 v2 (새 규정 적용)
-// 수도권: 생애최초LTV70% / 무주택·1주택 규제40%·비규제70% / 2주택대출금지
-//         한도상한: 15억이하→6억, 15~25억→4억, 25억초과→2억
-//         DSR + 스트레스DSR 3% 적용
-// 지방: 생애최초 감정가80%·낙찰가80% / 1주택이상 감정가70%·낙찰가80%
-//       DSR + 스트레스DSR 3% 적용
-// 사업자 신탁대출: 주택80%, 비주택90% (DSR 비규제)
-// =============================================
 function calculateLoan(params) {
     const { expectedWinningPrice, appraisalPrice, kbPrice, homeOwnership, region, propertyType, annualIncome, existingDebt, creditScore, isRegulated } = params;
-
-    // 고정금리 (개인)
     const fixedRateMin = 4.2;
     const fixedRateMax = 4.5;
-    // 스트레스 DSR 심사금리 = 고정금리 + 3%
-    const stressRatePct = fixedRateMin + 3; // 7.2%
-
+    const stressRatePct = fixedRateMin + 3;
     const isResidential = ['apt', 'villa', 'house', 'officetel'].includes(propertyType);
-    const isSudo = region === 'seoul' || region === 'metro'; // 수도권
-    const isLocal = region === 'local' || region === 'metro-city'; // 지방
-
-    // 서울=항상 규제지역 / 경기인천=isRegulated 파라미터 따름
+    const isSudo = region === 'seoul' || region === 'metro';
+    const isLocal = region === 'local' || region === 'metro-city';
     const regulatedZone = region === 'seoul' ? true : (isRegulated !== false);
-
     let finalLimit = 0;
     let calculationMethod = '';
     let ltvReason = '';
@@ -397,24 +348,18 @@ function calculateLoan(params) {
     let conditions = [];
     let capApplied = false;
     let capLimit = Infinity;
-
     const refVal = appraisalPrice > 0 ? appraisalPrice : 0;
     const fmt = n => n.toLocaleString('ko-KR');
 
     if (isSudo) {
-        // ======== 수도권 ========
         if (homeOwnership === 'multiple') {
-            // 2주택 이상: 개인 대출 중지
             isBanned = true;
             banReason = '수도권 2주택 이상은 개인 주택담보대출이 중지되었습니다.';
-
-            // 서울 2주택 이상: 사업자 대출도 잠정 중지
             if (region === 'seoul') {
                 trustSuspended = true;
                 trustSuspensionReason = '기준일 2026년 3월 25일 기준, 서울 2주택 이상 사업자 대출은 상품 변경 및 정책 혼선 가능성으로 잠시 중지되었습니다. 단, 금융사마다 상품이 변경될 수 있으니 추가 궁금한 사항은 전화 상담 바랍니다.';
             }
         } else {
-            // LTV 결정
             if (homeOwnership === 'first') {
                 appraisalLtvUsed = 70;
                 ltvReason = '생애최초 (수도권 LTV 70%)';
@@ -425,17 +370,14 @@ function calculateLoan(params) {
                 ltvReason = regulatedZone ? '무주택 (수도권 규제지역 LTV 40%)' : '무주택 (수도권 비규제지역 LTV 70%)';
                 ltvAdjustmentReason = regulatedZone ? '규제지역: 감정가 40%, 낙찰가 80% 중 낮은 금액' : '비규제지역: 감정가 70%, 낙찰가 80% 중 낮은 금액';
                 conditions = ['6개월 내 전입 필요'];
-            } else { // one
+            } else {
                 appraisalLtvUsed = regulatedZone ? 40 : 70;
                 ltvReason = regulatedZone ? '1주택 (수도권 규제지역 LTV 40%)' : '1주택 (수도권 비규제지역 LTV 70%)';
                 ltvAdjustmentReason = regulatedZone ? '규제지역: 감정가 40%, 낙찰가 80% 중 낮은 금액' : '비규제지역: 감정가 70%, 낙찰가 80% 중 낮은 금액';
                 conditions = ['6개월 내 전입 필요', '기존 주택 처분 조건'];
             }
-
-            // 한도 산출
             const byAppraisal = refVal > 0 ? Math.floor(refVal * appraisalLtvUsed / 100) : 0;
             const byWinning = Math.floor(expectedWinningPrice * 80 / 100);
-
             if (refVal > 0) {
                 finalLimit = Math.min(byAppraisal, byWinning);
                 const lowerLabel = byAppraisal <= byWinning ? `감정가 기준(${appraisalLtvUsed}%) → ${fmt(byAppraisal)}만원` : `낙찰가 기준(80%) → ${fmt(byWinning)}만원`;
@@ -444,20 +386,15 @@ function calculateLoan(params) {
                 finalLimit = byWinning;
                 calculationMethod = `낙찰가 ${fmt(expectedWinningPrice)}만원 × 80% = ${fmt(byWinning)}만원\n(감정가 미입력 — 감정가 입력 시 더 정확한 계산 가능)`;
             }
-
-            // 수도권 한도 상한 적용 (감정가 기준)
             const capBase = refVal > 0 ? refVal : expectedWinningPrice;
-            if (capBase <= 150000) capLimit = 60000;       // 15억 이하 → 6억
-            else if (capBase <= 250000) capLimit = 40000;  // 15~25억 → 4억
-            else capLimit = 20000;                          // 25억 초과 → 2억
-
+            if (capBase <= 150000) capLimit = 60000;
+            else if (capBase <= 250000) capLimit = 40000;
+            else capLimit = 20000;
             if (finalLimit > capLimit) {
                 finalLimit = capLimit;
                 capApplied = true;
                 calculationMethod += `\n→ 수도권 대출 상한 ${fmt(capLimit)}만원 적용 (감정가 ${capBase <= 150000 ? '15억 이하' : capBase <= 250000 ? '15~25억' : '25억 초과'} 구간)`;
             }
-
-            // 스트레스 DSR (소득 입력 시)
             if (annualIncome > 0) {
                 const maxAnnual = annualIncome * 0.4 - (existingDebt || 0);
                 if (maxAnnual > 0) {
@@ -465,21 +402,12 @@ function calculateLoan(params) {
                     const n = 25 * 12;
                     const amort = r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
                     const dsrMax = Math.floor((maxAnnual / 12) / amort);
-                    if (dsrMax < finalLimit) {
-                        finalLimit = dsrMax;
-                        calculationMethod += `\n→ 스트레스 DSR (심사금리 ${stressRatePct}%) 적용: ${fmt(dsrMax)}만원으로 조정`;
-                    }
-                } else {
-                    finalLimit = 0;
-                    calculationMethod += '\n→ 기존 부채로 인해 DSR 한도 초과 (대출 불가)';
-                }
+                    if (dsrMax < finalLimit) { finalLimit = dsrMax; calculationMethod += `\n→ 스트레스 DSR (심사금리 ${stressRatePct}%) 적용: ${fmt(dsrMax)}만원으로 조정`; }
+                } else { finalLimit = 0; calculationMethod += '\n→ 기존 부채로 인해 DSR 한도 초과 (대출 불가)'; }
             }
         }
-
     } else {
-        // ======== 지방 (광역시 포함) ========
         winningLtvUsed = 80;
-
         if (homeOwnership === 'first') {
             appraisalLtvUsed = 80;
             ltvReason = '생애최초 (지방 감정가·낙찰가 80%)';
@@ -494,7 +422,6 @@ function calculateLoan(params) {
                 calculationMethod = `낙찰가 ${fmt(expectedWinningPrice)}만원 × 80% = ${fmt(byWinning)}만원\n(감정가 미입력)`;
             }
         } else {
-            // 무주택/1주택/2주택 모두 동일: 감정가70%, 낙찰가80%
             appraisalLtvUsed = 70;
             const ownerMap = { none: '무주택', one: '1주택', multiple: '2주택 이상' };
             ltvReason = `${ownerMap[homeOwnership]||'1주택이상'} (지방 감정가70%·낙찰가80%)`;
@@ -510,8 +437,6 @@ function calculateLoan(params) {
                 calculationMethod = `낙찰가 ${fmt(expectedWinningPrice)}만원 × 80% = ${fmt(byWinning)}만원\n(감정가 미입력)`;
             }
         }
-
-        // 지방도 스트레스 DSR 적용
         if (annualIncome > 0) {
             const maxAnnual = annualIncome * 0.4 - (existingDebt || 0);
             if (maxAnnual > 0) {
@@ -519,70 +444,26 @@ function calculateLoan(params) {
                 const n = 25 * 12;
                 const amort = r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
                 const dsrMax = Math.floor((maxAnnual / 12) / amort);
-                if (dsrMax < finalLimit) {
-                    finalLimit = dsrMax;
-                    calculationMethod += `\n→ 스트레스 DSR (심사금리 ${stressRatePct}%) 적용: ${fmt(dsrMax)}만원으로 조정`;
-                }
-            } else {
-                finalLimit = 0;
-                calculationMethod += '\n→ 기존 부채로 인해 DSR 한도 초과 (대출 불가)';
-            }
+                if (dsrMax < finalLimit) { finalLimit = dsrMax; calculationMethod += `\n→ 스트레스 DSR (심사금리 ${stressRatePct}%) 적용: ${fmt(dsrMax)}만원으로 조정`; }
+            } else { finalLimit = 0; calculationMethod += '\n→ 기존 부채로 인해 DSR 한도 초과 (대출 불가)'; }
         }
     }
 
     if (finalLimit < 0) finalLimit = 0;
     const personalLtvPercent = expectedWinningPrice > 0 ? Math.round((finalLimit / expectedWinningPrice) * 100) : 0;
-
-    // 사업자 신탁대출: 주택 80%, 비주택 90%
     const trustLtvRate = isResidential ? 0.80 : 0.90;
     const trustLtvPercent = isResidential ? 80 : 90;
     const trustLimit = Math.floor(expectedWinningPrice * trustLtvRate);
-
-    // 월 이자
     const personalMonthlyInterest = Math.floor(finalLimit * (fixedRateMin / 100) / 12);
     const trustMonthlyInterest = Math.floor(trustLimit * (4.5 / 100) / 12);
-
-    // DSR 표시용
     const maxMonthlyPayment = annualIncome > 0 ? annualIncome / 12 * 0.4 : 0;
     const existingMonthlyPayment = (existingDebt || 0) / 12;
     const availableMonthlyPayment = Math.max(0, maxMonthlyPayment - existingMonthlyPayment);
 
     return {
-        personal: {
-            limit: finalLimit,
-            ltv: personalLtvPercent,
-            appraisalLtvUsed,
-            winningLtvUsed,
-            rate: { min: fixedRateMin, max: fixedRateMax },
-            monthlyInterest: personalMonthlyInterest,
-            ltvReason,
-            calculationMethod,
-            ltvAdjustment: ltvAdjustmentReason,
-            isLocal,
-            isSudo,
-            isBanned,
-            banReason,
-            conditions,
-            capApplied,
-            capLimit,
-            stressRatePct,
-            regulatedZone
-        },
-        trust: {
-            limit: trustLimit,
-            ltv: trustLtvPercent,
-            rate: { min: 4.5, max: 5.5 },
-            monthlyInterest: trustMonthlyInterest,
-            isResidential,
-            isSuspended: trustSuspended,
-            suspensionReason: trustSuspensionReason,
-            reason: `사업자 신탁대출 (DSR 비규제, 방 빼기 없음) - ${isResidential ? '주택 80%' : '비주택 90%'}`
-        },
-        dsr: {
-            maxMonthlyPayment: Math.floor(maxMonthlyPayment),
-            availableMonthlyPayment: Math.floor(availableMonthlyPayment),
-            stressRatePct
-        }
+        personal: { limit: finalLimit, ltv: personalLtvPercent, appraisalLtvUsed, winningLtvUsed, rate: { min: fixedRateMin, max: fixedRateMax }, monthlyInterest: personalMonthlyInterest, ltvReason, calculationMethod, ltvAdjustment: ltvAdjustmentReason, isLocal, isSudo, isBanned, banReason, conditions, capApplied, capLimit, stressRatePct, regulatedZone },
+        trust: { limit: trustLimit, ltv: trustLtvPercent, rate: { min: 4.5, max: 5.5 }, monthlyInterest: trustMonthlyInterest, isResidential, isSuspended: trustSuspended, suspensionReason: trustSuspensionReason, reason: `사업자 신탁대출 (DSR 비규제, 방 빼기 없음) - ${isResidential ? '주택 80%' : '비주택 90%'}` },
+        dsr: { maxMonthlyPayment: Math.floor(maxMonthlyPayment), availableMonthlyPayment: Math.floor(availableMonthlyPayment), stressRatePct }
     };
 }
 
@@ -609,8 +490,6 @@ function buildTrustCard(result, fmt) {
             </div>`;
 }
 
-
-
 function buildTrustSuspendedCard(result) {
     return `<div class="loan-card" style="border:2px solid #ef9a9a; background:#fff8f8;">
                 <div class="loan-card-header"><div class="loan-card-icon" style="background:#c62828;"><i class="fas fa-pause-circle"></i></div><h3>사업자 대출 중지</h3></div>
@@ -629,7 +508,6 @@ function displayResult(result, formData) {
     const regionText = { 'seoul': '서울', 'metro': '수도권(경기/인천)', 'metro-city': '광역시', 'local': '지방' };
     const propText = { 'apt': '아파트', 'villa': '빌라/연립', 'house': '단독주택', 'officetel': '오피스텔', 'commercial': '상가/업무시설', 'land': '토지' };
 
-    // 2주택 이상 수도권 대출 중지 케이스
     if (result.personal.isBanned) {
         const trustCard = result.trust.isSuspended ? buildTrustSuspendedCard(result) : buildTrustCard(result, fmt);
         const subMessage = result.trust.isSuspended
@@ -638,8 +516,7 @@ function displayResult(result, formData) {
         resultSection.innerHTML = `
             <div class="result-header" style="background:linear-gradient(135deg,#c62828,#e53935);"><h2><i class="fas fa-ban"></i> 개인 대출 중지</h2></div>
             <div style="background:#fff3f3;border:1px solid #ef9a9a;border-radius:8px;padding:16px;margin:16px 0;font-size:14px;line-height:1.8;">
-                <p><strong>⚠️ ${result.personal.banReason}</strong></p>
-                ${subMessage}
+                <p><strong>⚠️ ${result.personal.banReason}</strong></p>${subMessage}
             </div>
             <div class="loan-cards">${trustCard}</div>
             <div class="result-cta"><h3><i class="fas fa-phone-alt"></i> 전문가 상담</h3>
@@ -649,44 +526,18 @@ function displayResult(result, formData) {
         return;
     }
 
-    // 조건 배너 (전입 조건 등)
     const conditionBanner = result.personal.conditions && result.personal.conditions.length > 0
-        ? `<div style="background:#fff8e1;border-left:4px solid #ffc107;padding:10px 14px;border-radius:6px;margin-top:10px;font-size:13px;color:#795548;">
-            <strong>📋 대출 조건:</strong> ${result.personal.conditions.join(' · ')}
-          </div>`
-        : '';
-
-    // 한도 상한 배너
+        ? `<div style="background:#fff8e1;border-left:4px solid #ffc107;padding:10px 14px;border-radius:6px;margin-top:10px;font-size:13px;color:#795548;"><strong>📋 대출 조건:</strong> ${result.personal.conditions.join(' · ')}</div>` : '';
     const capBanner = result.personal.capApplied
-        ? `<div style="background:#e8eaf6;border-left:4px solid #5c6bc0;padding:10px 14px;border-radius:6px;margin-top:8px;font-size:13px;color:#283593;">
-            <strong>🔒 수도권 한도 상한 적용:</strong> 최대 <strong>${fmt(result.personal.capLimit)}만원</strong>으로 제한됨
-          </div>`
-        : '';
-
-    // 지방 안내 배너
+        ? `<div style="background:#e8eaf6;border-left:4px solid #5c6bc0;padding:10px 14px;border-radius:6px;margin-top:8px;font-size:13px;color:#283593;"><strong>🔒 수도권 한도 상한 적용:</strong> 최대 <strong>${fmt(result.personal.capLimit)}만원</strong>으로 제한됨</div>` : '';
     const localNote = result.personal.isLocal
-        ? `<div style="background:#e8f5e9;padding:12px;border-radius:6px;margin-top:10px;border-left:4px solid #4caf50;font-size:13px;color:#2e7d32;">
-            <i class="fas fa-info-circle"></i> <strong>지방 기준 적용</strong><br>
-            생애최초: 감정가·낙찰가 80% 중 낮은 금액 / 그 외: 감정가 70%·낙찰가 80% 중 낮은 금액
-          </div>`
-        : '';
-
-    // 스트레스 DSR 안내
-    const dsrNote = `<div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:#666;">
-        <i class="fas fa-calculator"></i> 스트레스 DSR 적용 (심사금리 ${result.personal.stressRatePct}% = 고정금리 ${result.personal.rate.min}% + 가산 3%)
-    </div>`;
-
-    // 전문가 코멘트 (개인)
+        ? `<div style="background:#e8f5e9;padding:12px;border-radius:6px;margin-top:10px;border-left:4px solid #4caf50;font-size:13px;color:#2e7d32;"><i class="fas fa-info-circle"></i> <strong>지방 기준 적용</strong><br>생애최초: 감정가·낙찰가 80% 중 낮은 금액 / 그 외: 감정가 70%·낙찰가 80% 중 낮은 금액</div>` : '';
+    const dsrNote = `<div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:#666;"><i class="fas fa-calculator"></i> 스트레스 DSR 적용 (심사금리 ${result.personal.stressRatePct}% = 고정금리 ${result.personal.rate.min}% + 가산 3%)</div>`;
     const appraisalLtv = result.personal.appraisalLtvUsed;
     const winningLtv = result.personal.winningLtvUsed;
     const expertCommentPersonal = appraisalLtv > 0
-        ? `감정가 대비 <strong>${appraisalLtv}%</strong> · 낙찰가 대비 <strong>${winningLtv}%</strong> 중 낮은 금액이 대출 승인 기준이 되며,<br>
-           예상 대출 한도는 최대 <strong>${fmt(result.personal.limit)}만원</strong>이고,<br>
-           월 이자는 약 <strong>${fmt(result.personal.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(고정금리 ${result.personal.rate.min}% 기준)</span>`
-        : `낙찰가 대비 <strong>${winningLtv}%</strong> 기준으로 대출 승인이 되며,<br>
-           예상 대출 한도는 최대 <strong>${fmt(result.personal.limit)}만원</strong>이고,<br>
-           월 이자는 약 <strong>${fmt(result.personal.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(고정금리 ${result.personal.rate.min}% 기준)</span>`;
-
+        ? `감정가 대비 <strong>${appraisalLtv}%</strong> · 낙찰가 대비 <strong>${winningLtv}%</strong> 중 낮은 금액이 대출 승인 기준이 되며,<br>예상 대출 한도는 최대 <strong>${fmt(result.personal.limit)}만원</strong>이고,<br>월 이자는 약 <strong>${fmt(result.personal.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(고정금리 ${result.personal.rate.min}% 기준)</span>`
+        : `낙찰가 대비 <strong>${winningLtv}%</strong> 기준으로 대출 승인이 되며,<br>예상 대출 한도는 최대 <strong>${fmt(result.personal.limit)}만원</strong>이고,<br>월 이자는 약 <strong>${fmt(result.personal.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(고정금리 ${result.personal.rate.min}% 기준)</span>`;
 
     const html = `
         <div class="result-header"><h2><i class="fas fa-check-circle"></i> 대출 한도 계산 완료</h2></div>
@@ -713,7 +564,6 @@ function displayResult(result, formData) {
                     ${result.personal.ltvAdjustment ? `<p style="margin:5px 0;"><strong>주의:</strong> ${result.personal.ltvAdjustment}</p>` : ''}
                     <p style="margin:5px 0;color:#666;font-size:12px;">※ 실제 금리 및 한도는 금융기관 심사에 따라 달라질 수 있습니다.</p>
                 </div>
-                <!-- 전문가 코멘트 (개인) -->
                 <div class="expert-comment">
                     <div class="expert-comment-title"><i class="fas fa-user-tie"></i> 전문가 코멘트</div>
                     <p>${expertCommentPersonal}</p>
@@ -721,7 +571,6 @@ function displayResult(result, formData) {
             </div>
             ${buildTrustCard(result, fmt)}
         </div>
-        <!-- 플랫폼 면책 고지 -->
         <div class="platform-disclaimer">
             <i class="fas fa-shield-alt"></i>
             <div>
@@ -792,13 +641,7 @@ function showHelp(topic) {
     const helpContent = {
         'credit-score': {
             title: '💡 신용점수란?',
-            content: `<p>신용점수는 개인의 신용 상태를 숫자로 나타낸 것입니다.</p><br>
-            <p><strong>무료 확인 방법:</strong></p>
-            <ul>
-                <li>카카오톡 앱 → 더보기(···) → 카카오페이 → 내 신용점수</li>
-                <li>NICE 신용평가, 올크레딧 앱 이용</li>
-            </ul><br>
-            <a href="https://m.score.kakao.com/" target="_blank" class="btn btn-primary"><i class="fas fa-comment"></i> 카카오페이 신용점수 확인하기</a>`
+            content: `<p>신용점수는 개인의 신용 상태를 숫자로 나타낸 것입니다.</p><br><p><strong>무료 확인 방법:</strong></p><ul><li>카카오톡 앱 → 더보기(···) → 카카오페이 → 내 신용점수</li><li>NICE 신용평가, 올크레딧 앱 이용</li></ul><br><a href="https://m.score.kakao.com/" target="_blank" class="btn btn-primary"><i class="fas fa-comment"></i> 카카오페이 신용점수 확인하기</a>`
         }
     };
     const help = helpContent[topic];
@@ -809,36 +652,23 @@ function showHelp(topic) {
     document.body.appendChild(modal);
 }
 
-// =============================================
-// 낙찰 후 신청 폼 제출 (Supabase 우선, 실패 시 localStorage 폴백)
-// =============================================
 function getAuctionTalkSupabaseClient() {
-    return window.AUCTIONTALK_SUPABASE_READY && window.auctiontalkSupabase
-        ? window.auctiontalkSupabase
-        : null;
+    return window.AUCTIONTALK_SUPABASE_READY && window.auctiontalkSupabase ? window.auctiontalkSupabase : null;
 }
 
 function buildInquiryPayload(data) {
     return {
-        name: data.name || '',
-        phone: data.phone || '',
-        email: data.email || '',
-        address: data.address || data.propertyAddress || '',
-        case_number: data.caseNumber || '',
-        property_type: data.propertyType || '',
-        region: data.region || '',
+        name: data.name || '', phone: data.phone || '', email: data.email || '',
+        address: data.address || data.propertyAddress || '', case_number: data.caseNumber || '',
+        property_type: data.propertyType || '', region: data.region || '',
         home_ownership: data.homeOwnership || '',
         appraisal_value: parseInt(data.appraisalValue || 0, 10) || 0,
         kb_price: parseInt(data.kbPrice || 0, 10) || 0,
         expected_winning_price: parseInt(data.expectedPrice || 0, 10) || 0,
         annual_income: parseInt(data.annualIncome || 0, 10) || 0,
         existing_debt: parseInt(data.existingDebt || 0, 10) || 0,
-        credit_score: data.creditScore || '',
-        is_regulated: data.isRegulated || '',
-        status: 'pending',
-        assigned_to: 'unassigned',
-        memo: '',
-        source: 'website'
+        credit_score: data.creditScore || '', is_regulated: data.isRegulated || '',
+        status: 'pending', assigned_to: 'unassigned', memo: '', source: 'website'
     };
 }
 
@@ -850,10 +680,8 @@ async function handleAfterFormSubmit(e) {
         alert('개인정보 수집 및 이용에 동의해주세요.');
         return;
     }
-
     const inquiryData = buildInquiryPayload(data);
     const supabase = getAuctionTalkSupabaseClient();
-
     if (supabase) {
         try {
             const { error } = await supabase.from('inquiries').insert([inquiryData]);
@@ -861,22 +689,12 @@ async function handleAfterFormSubmit(e) {
             showSuccessModal();
             e.target.reset();
             return;
-        } catch (error) {
-            console.error('Supabase 저장 실패, localStorage 폴백:', error);
-        }
+        } catch (error) { console.error('Supabase 저장 실패, localStorage 폴백:', error); }
     }
-
-    const fallbackInquiry = {
-        ...data,
-        status: 'pending',
-        source: 'website',
-        created_at: new Date().toISOString(),
-        id: Date.now()
-    };
+    const fallbackInquiry = { ...data, status: 'pending', source: 'website', created_at: new Date().toISOString(), id: Date.now() };
     const inquiries = loadFromLocalStorage('pendingInquiries') || [];
     inquiries.push(fallbackInquiry);
     saveToLocalStorage('pendingInquiries', inquiries);
-
     showSuccessModal();
     e.target.reset();
 }
@@ -885,6 +703,7 @@ function showSuccessModal() {
     const modal = document.getElementById('success-modal');
     if (modal) modal.classList.add('show');
 }
+
 function closeModal() {
     const modal = document.getElementById('success-modal');
     if (modal) modal.classList.remove('show');
