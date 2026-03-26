@@ -1,1 +1,140 @@
+/* =============================================
+   모바일 전용 추가 CSS
+   PC 레이아웃 변경 없음 - @media (max-width: 768px) 내부만 적용
+   ============================================= */
+
+/* ── 필수/선택 뱃지 ── */
+.required-badge {
+    display: inline-block;
+    background: #e53e3e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+}
+
+.optional-badge {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #718096;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* ── 금액 한글 변환 표시 ── */
+.money-display {
+    margin-top: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(90deg, #ebf8ff, #e3f2fd);
+    border-left: 3px solid #0066cc;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0066cc;
+}
+
+/* ── 법적고지 섹션 ── */
+.legal-notice-section {
+    background: #1a202c;
+    border-top: 3px solid #e53e3e;
+    padding: 24px 0;
+    color: #e2e8f0;
+}
+
+.legal-notice-section .container {
+    padding: 0 20px;
+}
+
+.legal-notice-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.legal-notice-header .legal-icon {
+    font-size: 20px;
+    color: #ffd700;
+}
+
+.legal-notice-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.legal-notice-items li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #cbd5e0;
+    line-height: 1.7;
+}
+
+.legal-notice-items li::before {
+    content: "•";
+    color: #e53e3e;
+    font-size: 16px;
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+/* ── 모바일 전용 스타일 ── */
+@media (max-width: 768px) {
+    #about { display: none; }
+
+    @keyframes ctaPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255,200,0,0.6); transform: scale(1); }
+        50% { box-shadow: 0 0 0 10px rgba(255,200,0,0); transform: scale(1.03); }
+    }
+    .hero .btn-primary {
+        animation: ctaPulse 2s ease-in-out infinite;
+    }
+
+    .tab-button[data-tab="before"] { border-color: #0066cc; color: #0066cc; }
+    .tab-button[data-tab="before"].active { background: #0066cc; color: #fff; }
+    .tab-button[data-tab="after"] { border-color: #e53e3e; color: #e53e3e; }
+    .tab-button[data-tab="after"].active { background: #e53e3e; color: #fff; border-color: #e53e3e; }
+    .tab-button[data-tab="after"]:not(.active) { font-weight: 700; background: #fff5f5; }
+
+    .tab-content { padding: 16px; }
+    .form-section { margin-bottom: 24px; }
+    .money-display { font-size: 13px; padding: 5px 10px; }
+    .legal-notice-section { padding: 20px 0; }
+    .legal-notice-header { font-size: 15px; }
+    .legal-notice-items li { font-size: 12px; }
+
+    .free-cta-box {
+        background: linear-gradient(135deg, #ffd700, #ffb700);
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #222;
+        font-weight: 700;
+    }
+    .free-cta-box .free-title { font-size: 22px; margin-bottom: 8px; }
+    .free-cta-box ul { list-style: none; padding: 0; margin: 0; font-size: 14px; font-weight: 600; }
+    .free-cta-box ul li::before { content: "✓ "; color: #0066cc; }
+}
+
+@media (min-width: 769px) {
+    .legal-notice-section { display: none; }
+    .free-cta-box { display: none; }
+}
 
