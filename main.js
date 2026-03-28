@@ -557,3 +557,39 @@ function displayDefaultConsultants() {
 function contactConsultant(phone) {
     alert(`상담사에게 연락하시려면 ${phone}로 전화해주세요.\n\n"대장TV 경매톡 플랫폼"을 통해 연락했다고 말씀해주시면 더욱 빠른 상담이 가능합니다.`);
 }
+// ── 접속자 & 계산기 사용 트래킹 ──
+async function trackVisitor() {
+    try {
+        await supabase.from('visitor_logs').insert([{
+            page: 'main',
+            user_agent: navigator.userAgent,
+            referrer: document.referrer || 'direct'
+        }]);
+    } catch(e) {}
+}
+
+async function trackCalcUsage(type) {
+    try {
+        await supabase.from('calc_logs').insert([{
+            type: type, // 'before' or 'after'
+            page: 'main'
+        }]);
+    } catch(e) {}
+}
+
+// 페이지 로드 시 접속자 기록
+document.addEventListener('DOMContentLoaded', function() {
+    trackVisitor();
+
+    // 낙찰 전 계산 버튼 트래킹
+    const beforeBtn = document.getElementById('before-submit-btn');
+    if (beforeBtn) {
+        beforeBtn.addEventListener('click', () => trackCalcUsage('before'));
+    }
+
+    // 낙찰 후 계산 버튼 트래킹
+    const afterBtn = document.getElementById('after-submit-btn');
+    if (afterBtn) {
+        afterBtn.addEventListener('click', () => trackCalcUsage('after'));
+    }
+});
