@@ -426,4 +426,47 @@ function escapeHtml(value) {
         .replace(/\"/g, '&quot;')
         .replace(/'/g, '&#39;');
 }
+// ── 접속자 & 계산기 통계 로드 ──
+async function loadVisitorStats() {
+    try {
+        const today = new Date().toISOString().split('T')[0];
 
+        // 오늘 접속자
+        const { count: todayVisitors } = await supabase
+            .from('visitor_logs')
+            .select('*', { count: 'exact', head: true })
+            .gte('created_at', today + 'T00:00:00')
+            .lte('created_at', today + 'T23:59:59');
+
+        // 누적 접속자
+        const { count: totalVisitors } = await supabase
+            .from('visitor_logs')
+            .select('*', { count: 'exact', head: true });
+
+        // 낙찰 전 계산 횟수
+        const { count: calcBefore } = await supabase
+            .from('calc_logs')
+            .select('*', { count: 'exact', head: true })
+            .eq('type', 'before');
+
+        // 낙찰 후 계산 횟수
+        const { count: calcAfter } = await supabase
+            .from('calc_logs')
+            .select('*', { count: 'exact', head: true })
+            .eq('type', 'after');
+
+        document.getElementById('stat-visitors-today').textContent = todayVisitors || 0;
+        document.getElementById('stat-visitors-total').textContent = totalVisitors || 0;
+        document.getElementById('stat-calc-before').textContent = calcBefore || 0;
+        document.getElementById('stat-calc-after').textContent = calcAfter || 0;
+
+    } catch (e) {
+        console.log('통계 로드 실패:', e);
+    }
+}
+
+// 대시보드 로드 시 실행
+const _origLoadDashboard = typeof loadDashboard === 'function' ? loadDashboard : null;
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(loadVisitorStats, 1000);
+});
