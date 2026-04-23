@@ -234,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(`${targetTab}-tab`).classList.add('active');
         });
     });
-    // loadConsultants(); // 전문가 섹션 비활성화
     loadFormData();
     updateProgress();
     updateMoneyDisplay('before-appraisal-price', 'before-appraisal-display');
@@ -310,7 +309,19 @@ function handleBeforeFormSubmit(e) {
 function calculateLoan(params) {
     const { expectedWinningPrice, appraisalPrice, kbPrice, homeOwnership, region, propertyType, annualIncome, existingDebt, creditScore, isRegulated } = params;
     const fixedRateMin = 4.2, fixedRateMax = 4.5, stressRatePct = fixedRateMin + 3;
-    const isResidential = ['apt', 'villa', 'house', 'officetel'].includes(propertyType);
+
+    // =============================================
+    // 오피스텔 대출 정책
+    // - 개인 주택대출: 기존과 동일 (주거용 취급)
+    // - 사업자 신탁대출: 비주택으로 분류
+    //   → 주택수/지역 무관, 낙찰가 80% 적용
+    //   → 상가/토지는 90%
+    // =============================================
+    const isOfficetel = propertyType === 'officetel';
+    const isResidentialPersonal = ['apt', 'villa', 'house', 'officetel'].includes(propertyType);
+    // 신탁대출 기준: 오피스텔은 비주택이지만 80% (상가/토지만 90%)
+    const isNonResidentialTrust = ['commercial', 'land'].includes(propertyType);
+
     const isSudo = region === 'seoul' || region === 'metro';
     const isLocal = region === 'local' || region === 'metro-city';
     const regulatedZone = region === 'seoul' ? true : (isRegulated !== false);
@@ -320,6 +331,7 @@ function calculateLoan(params) {
     const refVal = appraisalPrice > 0 ? appraisalPrice : 0;
     const fmt = n => n.toLocaleString('ko-KR');
 
+    // ── 개인 대출 계산 ──
     if (isSudo) {
         if (homeOwnership === 'multiple') {
             isBanned = true; banReason = '수도권 2주택 이상은 개인 주택담보대출이 중지되었습니다.';
@@ -363,8 +375,15 @@ function calculateLoan(params) {
 
     if (finalLimit < 0) finalLimit = 0;
     const personalLtvPercent = expectedWinningPrice > 0 ? Math.round((finalLimit / expectedWinningPrice) * 100) : 0;
-    const trustLtvRate = isResidential ? 0.80 : 0.90, trustLtvPercent = isResidential ? 80 : 90;
+
+    // ── 신탁대출 계산 ──
+    // 오피스텔: 비주택이지만 사업자 신탁대출 80% (주택수/지역 무관)
+    // 상가/토지: 90%
+    // 아파트/빌라/단독: 80%
+    const trustLtvRate = isNonResidentialTrust ? 0.90 : 0.80;
+    const trustLtvPercent = isNonResidentialTrust ? 90 : 80;
     const trustLimit = Math.floor(expectedWinningPrice * trustLtvRate);
+
     const personalMonthlyInterest = Math.floor(finalLimit * (fixedRateMin / 100) / 12);
     const trustMonthlyInterest = Math.floor(trustLimit * (4.5 / 100) / 12);
     const maxMonthlyPayment = annualIncome > 0 ? annualIncome / 12 * 0.4 : 0;
@@ -373,14 +392,22 @@ function calculateLoan(params) {
 
     return {
         personal: { limit: finalLimit, ltv: personalLtvPercent, appraisalLtvUsed, winningLtvUsed, rate: { min: fixedRateMin, max: fixedRateMax }, monthlyInterest: personalMonthlyInterest, ltvReason, calculationMethod, ltvAdjustment: ltvAdjustmentReason, isLocal, isSudo, isBanned, banReason, conditions, capApplied, capLimit, stressRatePct, regulatedZone },
-        trust: { limit: trustLimit, ltv: trustLtvPercent, rate: { min: 4.5, max: 5.5 }, monthlyInterest: trustMonthlyInterest, isResidential, isSuspended: trustSuspended, suspensionReason: trustSuspensionReason, reason: `사업자 신탁대출 (DSR 비규제, 방 빼기 없음) - ${isResidential ? '주택 80%' : '비주택 90%'}` },
+        trust: { limit: trustLimit, ltv: trustLtvPercent, rate: { min: 4.5, max: 5.5 }, monthlyInterest: trustMonthlyInterest, isNonResidential: isNonResidentialTrust, isOfficetel, isSuspended: trustSuspended, suspensionReason: trustSuspensionReason, reason: `사업자 신탁대출 (DSR 비규제, 방 빼기 없음) - ${isNonResidentialTrust ? '비주택(상가/토지) 90%' : isOfficetel ? '오피스텔 80% (주택수/지역 무관)' : '주택 80%'}` },
         dsr: { maxMonthlyPayment: Math.floor(maxMonthlyPayment), availableMonthlyPayment: Math.floor(availableMonthlyPayment), stressRatePct }
     };
 }
 
 function buildTrustCard(result, fmt) {
-    const expertCommentTrust = `사업자 대출은 개인과 달리 <strong>DSR 규제 없이</strong> 대출이 가능하며, 방 빼기 절차 없이 바로 실행 가능합니다.<br>${result.trust.isResidential ? '주택 기준 낙찰가의 <strong>최대 80%</strong>' : '비주택(상가/건물) 기준 낙찰가의 <strong>최대 90%</strong>'}까지 대출 가능하며,<br>예상 대출 한도는 최대 <strong>${fmt(result.trust.limit)}만원</strong>이고,<br>월 이자는 약 <strong>${fmt(result.trust.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(금리 4.5% 기준)</span><br><small style="color:#999;">※ 사업자 등록 필요 · 신탁 등기비 약 100~150만원</small>`;
-    return `<div class="loan-card"><div class="loan-card-header"><div class="loan-card-icon"><i class="fas fa-building"></i></div><h3>사업자 신탁대출</h3></div><div class="loan-detail"><span class="loan-detail-label">예상 대출 한도</span><span class="loan-detail-value highlight">${fmt(result.trust.limit)}만원</span></div><div class="loan-detail"><span class="loan-detail-label">LTV</span><span class="loan-detail-value">${result.trust.ltv}% (낙찰가 기준)</span></div><div class="loan-detail"><span class="loan-detail-label">예상 금리</span><span class="loan-detail-value">${result.trust.rate.min}% ~ ${result.trust.rate.max}%</span></div><div class="loan-detail"><span class="loan-detail-label">월 예상 이자</span><span class="loan-detail-value" style="color:#e65100;font-weight:700;">약 ${fmt(result.trust.monthlyInterest)}만원</span></div><div class="loan-detail"><span class="loan-detail-label" style="color:#28a745;">✅ DSR 규제</span><span class="loan-detail-value" style="color:#28a745;">비규제</span></div><div class="loan-detail"><span class="loan-detail-label" style="color:#28a745;">✅ 방 빼기</span><span class="loan-detail-value" style="color:#28a745;">불필요</span></div><div class="loan-detail"><span class="loan-detail-label">신탁 등기비</span><span class="loan-detail-value">약 100~150만원</span></div><div class="loan-detail"><span class="loan-detail-label">필수 조건</span><span class="loan-detail-value">사업자 등록 필요</span></div><div class="expert-comment" style="margin-top:15px;"><div class="expert-comment-title"><i class="fas fa-user-tie"></i> 전문가 코멘트</div><p>${expertCommentTrust}</p></div></div>`;
+    let trustDesc = '';
+    if (result.trust.isOfficetel) {
+        trustDesc = `오피스텔은 <strong>비주택</strong>으로 분류되어 사업자 신탁대출 적용 시<br>주택 보유수·지역에 <strong>관계없이</strong> 낙찰가의 <strong>80%</strong>까지 대출 가능합니다.`;
+    } else if (result.trust.isNonResidential) {
+        trustDesc = `비주택(상가/토지)은 사업자 신탁대출 기준 낙찰가의 <strong>최대 90%</strong>까지 대출 가능합니다.`;
+    } else {
+        trustDesc = `주택 기준 낙찰가의 <strong>최대 80%</strong>까지 대출 가능합니다.`;
+    }
+    const expertCommentTrust = `사업자 대출은 개인과 달리 <strong>DSR 규제 없이</strong> 대출이 가능하며, 방 빼기 절차 없이 바로 실행 가능합니다.<br>${trustDesc}<br>예상 대출 한도는 최대 <strong>${fmt(result.trust.limit)}만원</strong>이고,<br>월 이자는 약 <strong>${fmt(result.trust.monthlyInterest)}만원</strong>입니다. <span style="color:#888;font-size:12px;">(금리 4.5% 기준)</span><br><small style="color:#999;">※ 사업자 등록 필요 · 신탁 등기비 약 100~150만원</small>`;
+    return `<div class="loan-card"><div class="loan-card-header"><div class="loan-card-icon"><i class="fas fa-building"></i></div><h3>사업자 신탁대출</h3></div><div class="loan-detail"><span class="loan-detail-label">예상 대출 한도</span><span class="loan-detail-value highlight">${fmt(result.trust.limit)}만원</span></div><div class="loan-detail"><span class="loan-detail-label">LTV</span><span class="loan-detail-value">${result.trust.ltv}% (낙찰가 기준)</span></div><div class="loan-detail"><span class="loan-detail-label">예상 금리</span><span class="loan-detail-value">${result.trust.rate.min}% ~ ${result.trust.rate.max}%</span></div><div class="loan-detail"><span class="loan-detail-label">월 예상 이자</span><span class="loan-detail-value" style="color:#e65100;font-weight:700;">약 ${fmt(result.trust.monthlyInterest)}만원</span></div><div class="loan-detail"><span class="loan-detail-label" style="color:#28a745;">✅ DSR 규제</span><span class="loan-detail-value" style="color:#28a745;">비규제</span></div><div class="loan-detail"><span class="loan-detail-label" style="color:#28a745;">✅ 방 빼기</span><span class="loan-detail-value" style="color:#28a745;">불필요</span></div>${result.trust.isOfficetel ? `<div class="loan-detail"><span class="loan-detail-label" style="color:#1565c0;">✅ 주택수 무관</span><span class="loan-detail-value" style="color:#1565c0;">비주택 분류 적용</span></div>` : ''}<div class="loan-detail"><span class="loan-detail-label">신탁 등기비</span><span class="loan-detail-value">약 100~150만원</span></div><div class="loan-detail"><span class="loan-detail-label">필수 조건</span><span class="loan-detail-value">사업자 등록 필요</span></div><div class="expert-comment" style="margin-top:15px;"><div class="expert-comment-title"><i class="fas fa-user-tie"></i> 전문가 코멘트</div><p>${expertCommentTrust}</p></div></div>`;
 }
 
 function buildTrustSuspendedCard(result) {
@@ -557,39 +584,17 @@ function displayDefaultConsultants() {
 function contactConsultant(phone) {
     alert(`상담사에게 연락하시려면 ${phone}로 전화해주세요.\n\n"대장TV 경매톡 플랫폼"을 통해 연락했다고 말씀해주시면 더욱 빠른 상담이 가능합니다.`);
 }
-// ── 접속자 & 계산기 사용 트래킹 ──
+
 async function trackVisitor() {
     try {
-        await supabase.from('visitor_logs').insert([{
-            page: 'main',
-            user_agent: navigator.userAgent,
-            referrer: document.referrer || 'direct'
-        }]);
+        const supabase = getAuctionTalkSupabaseClient();
+        if (supabase) await supabase.from('visitor_logs').insert([{ page: 'main', user_agent: navigator.userAgent, referrer: document.referrer || 'direct' }]);
     } catch(e) {}
 }
 
 async function trackCalcUsage(type) {
     try {
-        await supabase.from('calc_logs').insert([{
-            type: type, // 'before' or 'after'
-            page: 'main'
-        }]);
+        const supabase = getAuctionTalkSupabaseClient();
+        if (supabase) await supabase.from('calc_logs').insert([{ type: type, page: 'main' }]);
     } catch(e) {}
 }
-
-// 페이지 로드 시 접속자 기록
-document.addEventListener('DOMContentLoaded', function() {
-    trackVisitor();
-
-    // 낙찰 전 계산 버튼 트래킹
-    const beforeBtn = document.getElementById('before-submit-btn');
-    if (beforeBtn) {
-        beforeBtn.addEventListener('click', () => trackCalcUsage('before'));
-    }
-
-    // 낙찰 후 계산 버튼 트래킹
-    const afterBtn = document.getElementById('after-submit-btn');
-    if (afterBtn) {
-        afterBtn.addEventListener('click', () => trackCalcUsage('after'));
-    }
-});
